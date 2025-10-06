@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="animations.css">
+</head>
+<body>
+
+  <div id="header">
+    <div>
+    <p class="co-name">VIBE</p>
+    <a href="/login"><div class="login">
+        Sign In
+    </div></a>
+    </div>
+</div>
+<div style="height:2.5rem;"></div>
+
+<div style="text-align: center;">
+<h4>VIBE <span id="text"></span></h4>
+</div>
+
+<div class="call-buttons">
+
+  <img src="assets/output-onlinegiftools.gif" width="300" height="200">
+
+  <div style="width:200px; height:200px;">
+    <img src="assets/products.png" class="img">
+  </div>
+
+</div>
+  <!-- <div id="wrapper">
+      <div> -->
+    <form id="loginForm">
+      <input type="text" name="username" placeholder="@Username" class="inputs slide1 fade-out-div" required />
+      <br>
+      <input type="password" name="password" placeholder="Password"  class="inputs slide2 fade-out-div"required />
+      <br>
+      <div style="display:flex; gap:0.5rem;">
+      <button type="submit" class="slide3" id="fade-out-button">Login</button>
+      </div>
+    </form>
+    <div style="text-align: center;" class="slide4 fade-out-div">
+      <a href="/forgot-password"><button class="btn2" >forgot password?</button></a>
+    <div class="space"></div>
+    <p>Don't have an account? <a href="/">Create one now</a></p>
+  </div>
+  <!-- </div>
+
+  </div> -->
+  <div class="space"></div>
+  <div class="call-buttons">
+            
+    <div style="width:200px; height:200px;">
+      <img src="assets/images.png" class="img">
+    </div>
+    <img src="assets/cha.gif" width="300" height="200">
+    </div>
+
+  <script>
+   document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const data = {};
+  formData.forEach((value, key) => data[key] = value);
+
+  const res = await fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+
+  const result = await res.json();
+
+  if (result.success) {
+
+    // Basic device detection
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = '/mobile-dashboard';
+    } else {
+      window.location.href = '/dashboard';
+    }
+  } else {
+    alert('Login failed');
+  }
+});
+
+
+let textElement = document.getElementById('text');
+let texts = ['with friends and family', 'with love ones', 'with new friends online', 'on a higher level', 'like a pro'];
+let index = 0;
+
+function fadeOut(element, callback) {
+  let opacity = 1;
+  let fadeOutInterval = setInterval(() => {
+    opacity -= 0.1;
+    element.style.opacity = opacity;
+    if (opacity <= 0) {
+      clearInterval(fadeOutInterval);
+      callback();
+    }
+  }, 50);
+}
+
+function fadeIn(element) {
+  let opacity = 0;
+  element.style.opacity = opacity;
+  let fadeInInterval = setInterval(() => {
+    opacity += 0.1;
+    element.style.opacity = opacity;
+    if (opacity >= 1) {
+      clearInterval(fadeInInterval);
+    }
+  }, 50);
+}
+
+setInterval(() => {
+  fadeOut(textElement, () => {
+    textElement.innerText = texts[index];
+    fadeIn(textElement);
+    index = (index + 1) % texts.length;
+  });
+}, 5000);
+
+let fadeOutButton = document.getElementById('fade-out-button');
+let fadeOutDivs = document.getElementsByClassName('fade-out-div');
+
+fadeOutButton.addEventListener('click', () => {
+  for (let i = 0; i < fadeOutDivs.length; i++) {
+    let opacity = 1;
+    let fadeOutInterval = setInterval(() => {
+      opacity -= 0.1;
+      fadeOutDivs[i].style.opacity = opacity;
+      if (opacity <= 0) {
+        clearInterval(fadeOutInterval);
+      }
+    }, 20); // 20ms interval for 2s fade out
+  }
+});
+
+
+  </script>
+</body>
+</html>

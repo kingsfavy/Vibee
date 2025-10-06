@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="mediaqueries.css">
+    <link rel="stylesheet" href="animations.css">
+</head>
+<body>
+
+    <div id="wrapper">
+        <div id="left_pannel">
+            <div id="padding">
+            <img src="pp.gif" class="img">
+            <br>
+            <p><span id="userInfo"></span></p>
+            
+            <p><span id="namee"></span></p>
+            
+            <p><span id="namee"></span></p>
+           <p><span id="email"></span></p>
+           <br>
+           <a href="/profile"><button class="btn2">Full Profile</button></a>
+           <div>
+            <br><br>
+           <label for="news" class="label_settings desktop slide1">News Feed
+            <img src="assets/new.webp" class="label-icon">
+           </label>
+           <label for="contacts" class="label_contacts desktop slide2">Contacts
+            <img src="assets/cont.gif" class="label-icon">
+           </label>
+           <!-- <a href="/chat">
+           <label for="chat" class="label_chats desktop slide3">chat
+            <img src="output-onlinegiftools (3).gif"  class="label-icon">
+           </label></a> -->
+           <label for="settings" class="label_settings desktop slide3">Settings
+            <img src="assets/set.webp" class="label-icon">
+           </label>
+        </div> 
+
+        </div> 
+        </div>
+
+        <div id="right_pannel">
+            <div id="header">
+                <p class="co-name">Vibe</p>
+                </div>
+                <div id="container">
+
+
+                    <div id="inner_left_pannel2">
+                        <h2>News Feed</h2>
+                        <input type="text" id="search"  placeholder="Search posts..."> 
+                        <br>
+                        <div class="space"></div>
+                        <div style="text-align: left;">
+                        <div id="name"></div>
+                       <div class="messages" id="messages">Loading News Feeds</div>
+                    </div>
+
+                    </div>
+
+
+                    <div id="inner_left_pannel">
+                        <h2>People online</h2>
+                        <input type="text" id="search"  placeholder="Search Contacts..."> 
+                        <div class="space"></div>
+                        <div id="userList"></div>
+                    </div>
+
+                    <input type="radio" id="chat" name="radios" class="input">
+                    <input type="radio" id="contacts" name="radios" class="input">
+                    <input type="radio" id="news" name="radios" class="input">
+                    <input type="radio" id="settings" name="radios" class="input">
+                </div>
+
+            </div>
+    </div>
+
+
+    <script src="profile.js"></script>
+    <script src="users.js"></script>
+    <script>
+          const messageBox = document.getElementById('messages');
+    
+    // ✅ Load old messages from the database
+    async function loadMessages() {
+      try {
+        const res = await fetch('http://localhost:3005/messages');
+        const data = await res.json();
+  
+        if (data.success) {
+          data.messages.forEach(msgObj => {
+            displayMessage(msgObj.msg);
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load messages:', error);
+      }
+    }
+  
+    // ✅ Display a message in the chat box
+    function displayMessage(message) {
+      const div = document.createElement('div');
+      div.textContent = message;
+      messageBox.appendChild(div);
+    }
+  
+    // ✅ Send a new message to the server
+    function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+  
+      fetch('http://localhost:3005/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ msg })
+      });
+  
+      input.value = '';
+    }
+  
+    // ✅ Real-time updates using SSE
+    const source = new EventSource('http://localhost:3005/events');
+    source.onmessage = function (event) {
+      const msg = event.data;
+      displayMessage(msg);
+    };
+  
+    // ✅ Load messages when the page is ready
+    window.addEventListener('DOMContentLoaded', loadMessages);
+      
+
+
+      function getQueryParam(param) {
+const urlParams = new URLSearchParams(window.location.search);
+return urlParams.get(param);
+}
+
+const recipientUsernam = getQueryParam('username');
+document.getElementById("name").textContent = recipientUsernam;
+
+function profile(){
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  if (isMobile) {
+    window.location.href = '/mobile-dashboard';
+  } else {
+    window.location.href = '/dashboard';
+  }
+  }
+    </script>
+</body>
+</html>

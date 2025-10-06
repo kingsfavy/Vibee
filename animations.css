@@ -1,0 +1,73 @@
+.slide1{
+    animation: slide1 alternate 0.2s ease-in 1 0.5s both;
+}
+.slide2{
+    animation: slide2 alternate 0.2s ease-in 1 1s both;
+}
+.slide3{
+    animation: slide3 alternate 0.2s ease-in 1 2s both;
+}
+.slide4{
+    animation: slide4 alternate 0.2s ease-in 1 3s both;
+}
+.slide5{
+    animation: slide4 alternate 0.2s ease-in 1 4s both;
+}
+.slide6{
+    animation: slide4 alternate 0.2s ease-in 1 5s both;
+}
+
+@keyframes slide1 {
+    0%{
+        transform: translateY(5px);
+        opacity: 0;
+    }100%{
+        transform: translateY(-5px);
+        opacity: 1;
+    }
+}
+@keyframes slide2 {
+    0%{
+        transform: translateY(5px);
+        opacity: 0;
+    }100%{
+        transform: translateY(-5px);
+        opacity: 1;
+    }
+}
+@keyframes slide3 {
+    0%{
+        transform: translateY(5px);
+        opacity: 0;
+    }100%{
+        transform: translateY(-5px);
+        opacity: 1;
+    }
+}
+@keyframes slide4 {
+    0%{
+        transform: translateY(5px);
+        opacity: 0;
+    }100%{
+        transform: translateY(-5px);
+        opacity: 1;
+    }
+}
+@keyframes slide5 {
+    0%{
+        transform: translateY(5px);
+        opacity: 0;
+    }100%{
+        transform: translateY(-5px);
+        opacity: 1;
+    }
+}
+@keyframes slide6 {
+    0%{
+        transform: translateY(5px);
+        opacity: 0;
+    }100%{
+        transform: translateY(-5px);
+        opacity: 1;
+    }
+}

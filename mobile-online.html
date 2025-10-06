@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>people online</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="mediaqueries.css">
+    <link rel="stylesheet" href="animations.css">
+</head>
+<body>
+    <div id="wrapper">
+    <div id="inner_left_pannel">
+        <h2>People online </h2>
+        <p onclick="back()" class="mobile mail">Back to dashboard</p>
+        <input type="text" id="search"  placeholder="Search users..."> 
+        <div class="space"></div>
+        <div id="userList"></div>
+    </div>
+</div>
+
+<script src="profile.js"></script>
+<script src="users.js"></script>
+<script>
+    function back(){
+      const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = '/mobile-dashboard';
+    } else {
+      window.location.href = '/dashboard';
+    }
+    }
+</script>
+</body>
+</html>

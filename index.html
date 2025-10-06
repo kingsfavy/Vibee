@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="animations.css">
+</head>
+<body>
+
+  <div id="header">
+    <div>
+    <p class="co-name">VIBE</p>
+    <a href="/index"><div class="login">
+        Sign Up
+    </div></a>
+    </div>
+</div>
+
+<div style="height:2.5rem;"></div>
+
+<div style="display:flex;justify-content: center;align-items: center;width:100%;">
+<h4>
+  <strong><span id="welcome">Welcome to</span></strong>
+  <strong><span class="slide1">VIBE</span></strong>
+  <span id="text"></span>
+</h4>
+</div>
+
+<div class="call-buttons">
+
+  <img src="assets/output-onlinegiftools.gif" width="300" height="200">
+
+  <div style="width:200px; height:200px;">
+    <img src="assets/products.png" class="img">
+  </div>
+
+</div>
+    <form id="registerForm">
+      <input type="text" name="yourname" placeholder="Full name"  class="inputs slide1" required /> 
+      <br>
+      <input type="text" name="username" placeholder="@Username"  class="inputs slide2" required />
+      <br>
+      <input type="email" name="email" placeholder="Email" class="inputs slide3" required />
+      <br>
+      <input type="password" name="password" placeholder="Password" class="inputs slide4" required /><br>
+      <button type="submit" class="slide5">Register</button>
+    </form>
+    <div style="text-align: center;" class="slide6">
+    <p>Already have an account? <a href="/login">Login here</a></p>
+  </div>
+
+  <div class="space"></div>
+
+    <div class="call-buttons">
+
+      <div style="width:200px; height:200px;">
+        <img src="assets/images.png" class="img">
+      </div>
+  
+      <img src="assets/cha.gif" width="300" height="200">
+      
+      </div>
+  
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = {};
+      formData.forEach((value, key) => data[key] = value);
+      const res = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      if(result.success) {
+    
+        alert('Registration successful! Please login.');
+        window.location.href = '/login';
+      } else {
+        alert('Registration failed: ' + result.error);
+      }
+    });
+
+    let textElement = document.getElementById('text');
+let texts = ['with friends and family', 'with love ones', 'with new friends online', 'on a higher level', 'like a pro'];
+let index = 0;
+
+function fadeOut(element, callback) {
+  let opacity = 1;
+  let fadeOutInterval = setInterval(() => {
+    opacity -= 0.1;
+    element.style.opacity = opacity;
+    if (opacity <= 0) {
+      clearInterval(fadeOutInterval);
+      callback();
+    }
+  }, 50);
+}
+
+function fadeIn(element) {
+  let opacity = 0;
+  element.style.opacity = opacity;
+  let fadeInInterval = setInterval(() => {
+    opacity += 0.1;
+    element.style.opacity = opacity;
+    if (opacity >= 1) {
+      clearInterval(fadeInInterval);
+    }
+  }, 50);
+}
+
+setInterval(() => {
+  fadeOut(textElement, () => {
+    textElement.innerText = texts[index];
+    fadeIn(textElement);
+    index = (index + 1) % texts.length;
+  });
+}, 5000);
+
+
+
+let welcomeText = document.getElementById('welcome');
+let opacity = 1;
+
+setTimeout(function() {
+  let fadeOutInterval = setInterval(function() {
+    opacity -= 0.1;
+    welcomeText.style.opacity = opacity;
+    if (opacity <= 0) {
+      clearInterval(fadeOutInterval);
+    }
+  }, 50);
+}, 5000);
+  </script>
+</body>
+</html>

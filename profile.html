@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>your Profile</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="mediaqueries.css">
+  <link rel="stylesheet" href="animations.css">
+</head>
+<body>
+  
+    <h2><span id="name"></span>'s  Profile</h2><br>
+    <p id="userInfo">Loading...</p><br>
+    <p id="email">Loading...</p><br>
+    
+    <nav>
+      <a onclick="profile()" id="dashboard">Dashboard</a>|
+      <a href="/logout">Logout</a>
+    </nav>
+  
+  <script>
+    // Fetch the user's profile information from the API
+    async function fetchProfile() {
+      try {
+        const res = await fetch('/api/profile');
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById('userInfo').textContent = 'Username: ' + data.user.username;
+          document.getElementById('name').textContent =  data.user.yourname;
+          document.getElementById('email').textContent = 'Email: ' + data.user.email;
+          
+        } else {
+          document.getElementById('userInfo').textContent = 'Error fetching profile data';
+          document.getElementById('email').textContent = 'Error fetching profile data';
+          document.getElementById('name').textContent = 'Error fetching profile data';
+       
+        }
+      } catch (error) {
+        document.getElementById('userInfo').textContent = 'Error fetching profile data';
+        document.getElementById('email').textContent = 'Error fetching profile data';
+        document.getElementById('name').textContent = 'Error fetching profile data';
+  
+      }
+    }
+    fetchProfile();
+
+    function profile(){
+      const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = '/mobile-dashboard';
+    } else {
+      window.location.href = '/dashboard';
+    }
+    }
+  </script>
+</body>
+</html>

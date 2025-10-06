@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Feed</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="mediaqueries.css">
+    <link rel="stylesheet" href="animations.css">
+</head>
+<body>
+    <div id="wrapper">
+        <div id="inner_left_pannel2">
+            <h2>News Feed</h2>
+            <p onclick="back()" class="mobile mail"><span><</span>Back to dashboard</p>
+            <input type="text" id="search"  placeholder="Search posts..."> 
+            <br>
+            <div class="space"></div>
+            <div style="text-align: left;">
+              
+            <div id="name"></div>
+           <div class="messages" id="messages">Loading News Feeds</div>
+        </div>
+
+        </div>
+    </div>
+    
+    <script src="profile.js"></script>
+    <script src="users.js"></script>
+    <script>
+          const messageBox = document.getElementById('messages');
+    
+    // ✅ Load old messages from the database
+    async function loadMessages() {
+      try {
+        const res = await fetch('http://localhost:3005/messages');
+        const data = await res.json();
+  
+        if (data.success) {
+          data.messages.forEach(msgObj => {
+            displayMessage(msgObj.msg);
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load messages:', error);
+      }
+    }
+  
+    // ✅ Display a message in the chat box
+    function displayMessage(message) {
+      const div = document.createElement('div');
+      div.textContent = message;
+      messageBox.appendChild(div);
+    }
+  
+    // ✅ Send a new message to the server
+    function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+  
+      fetch('http://localhost:3005/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ msg })
+      });
+  
+      input.value = '';
+    }
+  
+    // ✅ Real-time updates using SSE
+    const source = new EventSource('http://localhost:3005/events');
+    source.onmessage = function (event) {
+      const msg = event.data;
+      displayMessage(msg);
+    };
+  
+    // ✅ Load messages when the page is ready
+    window.addEventListener('DOMContentLoaded', loadMessages);
+      
+
+
+      function getQueryParam(param) {
+const urlParams = new URLSearchParams(window.location.search);
+return urlParams.get(param);
+}
+
+const recipientUsernam = getQueryParam('username');
+document.getElementById("name").textContent = recipientUsernam;
+
+function back(){
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  if (isMobile) {
+    window.location.href = '/mobile-dashboard';
+  } else {
+    window.location.href = '/dashboard';
+  }
+  }
+    </script>
+</body>
+</html>
