@@ -135,16 +135,16 @@ function ensureAuthenticated(req, res, next) {
 
 app.use(express.static('public'));
 
-app.get('/', (req, res) => res.sendFile(__dirname + 'index.html'));
-app.get('/login', (req, res) => res.sendFile(__dirname + 'login.html'));
-app.get('/reset-password', (req, res) => res.sendFile(__dirname + 'reset-password.html'));
-app.get('/forgot-password', (req, res) => res.sendFile(__dirname + 'forgot-password.html'));
-app.get('/profile', ensureAuthenticated, (req, res) => res.sendFile(__dirname + 'profile.html'));
-app.get('/dashboard', ensureAuthenticated, (req, res) => res.sendFile(__dirname + 'dashboard.html'));
-app.get('/mobile-dashboard', ensureAuthenticated, (req, res) => res.sendFile(__dirname + 'mobile-dashboard.html'));
-app.get('/mobile-news', ensureAuthenticated, (req, res) => res.sendFile(__dirname + 'mobile-news.html'));
-app.get('/mobile-online', ensureAuthenticated, (req, res) => res.sendFile(__dirname + 'mobile-online.html'));
-app.get('/chat', ensureAuthenticated, (req, res) => res.sendFile(__dirname + 'chat.html'));
+app.get('/', (req, res) => res.sendFile(__dirname, 'index.html'));
+app.get('/login', (req, res) => res.sendFile(__dirname, 'login.html'));
+app.get('/reset-password', (req, res) => res.sendFile(__dirname,  'reset-password.html'));
+app.get('/forgot-password', (req, res) => res.sendFile(__dirname  'forgot-password.html'));
+app.get('/profile', ensureAuthenticated, (req, res) => res.sendFile(__dirname, 'profile.html'));
+app.get('/dashboard', ensureAuthenticated, (req, res) => res.sendFile(__dirname, 'dashboard.html'));
+app.get('/mobile-dashboard', ensureAuthenticated, (req, res) => res.sendFile(__dirname, 'mobile-dashboard.html'));
+app.get('/mobile-news', ensureAuthenticated, (req, res) => res.sendFile(__dirname, 'mobile-news.html'));
+app.get('/mobile-online', ensureAuthenticated, (req, res) => res.sendFile(__dirname, 'mobile-online.html'));
+app.get('/chat', ensureAuthenticated, (req, res) => res.sendFile(__dirname, 'chat.html'));
 
 // app.post('/', async (req, res
 // ) => {
@@ -355,5 +355,6 @@ server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 
 });
+
 
 
