@@ -138,7 +138,7 @@ app.use(express.static('public'));
 app.get('/', (req, res) => res.sendFile(__dirname, 'index.html'));
 app.get('/login', (req, res) => res.sendFile(__dirname, 'login.html'));
 app.get('/reset-password', (req, res) => res.sendFile(__dirname,  'reset-password.html'));
-app.get('/forgot-password', (req, res) => res.sendFile(__dirname  'forgot-password.html'));
+app.get('/forgot-password', (req, res) => res.sendFile(__dirname,  'forgot-password.html'));
 app.get('/profile', ensureAuthenticated, (req, res) => res.sendFile(__dirname, 'profile.html'));
 app.get('/dashboard', ensureAuthenticated, (req, res) => res.sendFile(__dirname, 'dashboard.html'));
 app.get('/mobile-dashboard', ensureAuthenticated, (req, res) => res.sendFile(__dirname, 'mobile-dashboard.html'));
@@ -355,6 +355,7 @@ server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 
 });
+
 
 
 
