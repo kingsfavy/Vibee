@@ -12,7 +12,7 @@ const path = require('path');
 const cors = require('cors');
 //const Msg = require('./models/msg')
 
-const __dirname = path.resolve();
+//const __dirname = path.resolve();
 
 // ✅ Serve static files (HTML, CSS, JS, images)
 //app.use(express.static(__dirname));
@@ -359,6 +359,7 @@ server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 
 });
+
 
 
 
