@@ -133,7 +133,7 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/login');
 }
 
-app.use(express.static('public'));
+//app.use(express.static('public'));
 
 app.get('/', (req, res) => res.sendFile(__dirname, "index.html"));
 app.get('/login', (req, res) => res.sendFile(__dirname, "login.html"));
@@ -355,6 +355,7 @@ server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 
 });
+
 
 
 
