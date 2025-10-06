@@ -10,7 +10,7 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
-const Msg = require('./models/msg')
+//const Msg = require('./models/msg')
 
 
 const app = express();
@@ -353,4 +353,5 @@ function broadcast(data) {
 const PORT = process.env.PORT || 3005;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+
 });
