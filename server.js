@@ -15,7 +15,7 @@ const cors = require('cors');
 const __dirname = path.resolve();
 
 // ✅ Serve static files (HTML, CSS, JS, images)
-app.use(express.static(__dirname));
+//app.use(express.static(__dirname));
 
 const app = express();
 const server = http.createServer(app);
@@ -359,6 +359,7 @@ server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 
 });
+
 
 
 
