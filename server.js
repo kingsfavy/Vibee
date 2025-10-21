@@ -294,77 +294,63 @@ app.get('/users', async (req, res) => {
 
 
 //FOR CHATS
+// ✅ SSE Endpoint
+app.get("/events/:userId", (req, res) => {
+  const { userId } = req.params;
 
-// socket.on('private message' async ({ to, from, message }) => {
-//   const toSocket = users[to];
-
-// }
-// })
-
-// ✅ SSE endpoint for real-time updates
-app.get('/events', (req, res) => {
-  res.set({
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive'
+  // Set headers for SSE
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
   });
-  res.flushHeaders();
-  clients.push(res);
 
-  req.on('close', () => {
-    const index = clients.indexOf(res);
-    if (index !== -1) clients.splice(index, 1);
+  clients.set(userId, res);
+  console.log(`🟢 ${userId} connected for SSE`);
+
+  // Remove on disconnect
+  req.on("close", () => {
+    clients.delete(userId);
+    console.log(`🔴 ${userId} disconnected`);
   });
 });
 
-// ✅ POST new message and broadcast it
-app.post('/message', async (req, res) => {
-  const { msg } = req.body;
-  const message = new Msg({ msg });
+// ✅ Send message endpoint
+app.post("/send", async (req, res) => {
+  const { sender, receiver, text } = req.body;
 
-  try {
-    await message.save();
-    broadcast(msg);
-    res.status(201).json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to save message' });
+  if (!sender || !receiver || !text) {
+    return res.status(400).json({ error: "Missing fields" });
   }
-});
 
-// ✅ NEW: GET all messages from database
-app.get('/messages', async (req, res) => {
-  try {
-    const messages = await Msg.find().sort({ createdAt: 1 }); // optional: sort by oldest first
-    res.status(200).json({ success: true, messages });
-  } catch (err) {
-    console.error('Failed to fetch messages:', err);
-    res.status(500).json({ success: false, error: 'Could not retrieve messages' });
+  const msg = new Message({ sender, receiver, text });
+  await msg.save();
+
+  // Send to receiver if online
+  const client = clients.get(receiver);
+  if (client) {
+    client.write(`data: ${JSON.stringify(msg)}\n\n`);
   }
+
+  res.json({ success: true, message: msg });
 });
 
-// ✅ Helper to broadcast a message to all clients
-function broadcast(data) {
-  clients.forEach(client => {
-    client.write(`data: ${JSON.stringify(data)}\n\n`);
-  });
-}
+// ✅ Fetch conversation history
+app.get("/messages/:userId/:otherUserId", async (req, res) => {
+  const { userId, otherUserId } = req.params;
 
+  const msgs = await Message.find({
+    $or: [
+      { sender: userId, receiver: otherUserId },
+      { sender: otherUserId, receiver: userId },
+    ],
+  }).sort({ timestamp: 1 });
 
-
-
+  res.json(msgs);
+});
 
 const PORT = process.env.PORT || 3005;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 
 });
-
-
-
-
-
-
-
-
-
