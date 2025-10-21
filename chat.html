@@ -1,116 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>chat</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="mediaqueries.css">
-    <link rel="stylesheet" href="animations.css">
+  <meta charset="UTF-8">
+  <title>Chat</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #chat { border: 1px solid #ccc; height: 300px; overflow-y: auto; margin-bottom: 10px; padding: 10px; }
+  </style>
 </head>
 <body>
-                        
-                        <div class="chat-container" id ="chat-container">
-                            <div class="chat-header">
-                                <a onclick="back()" id="dashboard>
-                                  <h2  style="color:black;text-align: left; margin: 10px;" class="namee"><span><</span><span id="name"></span></h2>
-                            </a>
-                            <!-- <a href ="/mobile-dashboard" class="mobile">
-                              <h2  style="color:black;text-align: left; margin: 10px;" class="mobile"><span><</span><span id="name"></span></h2>
-                          </a> -->
-                            <div class="call-buttons">
-                              <button class="wrt" onclick="startAudioCall()">📞 <code id="code">Audio call</code></button>
-                              <button  class="wrt"onclick="startVideoCall()">📹<code id="code">Video call</code></button>
-                          </div>
-                            </div>
-                      <br>
-                      <hr class="hr">
-                      <br>
-                              <div class="messages" id="messages"></div>
-                              <div class="input-container">
-                             <button onclick="sendMessage()" class="btn2">+</button> 
-                                  <input type="text" id="messageInput"class="inputss blink"
-                                   placeholder="Type a message..." autocomplete="on" required>
-                                  <button onclick="sendMessage()">Send</button>
-                              </div>
-                          </div>
+  <h2>Direct Chat</h2>
+  <div id="chat"></div>
 
-                          
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="profile.js"></script>
-    <script src="users.js"></script>
-    <script>
-      const messageBox = document.getElementById('messages');
-    
-      // ✅ Load old messages from the database
-      async function loadMessages() {
-        try {
-          const res = await fetch('http://localhost:3005/messages');
-          const data = await res.json();
-    
-          if (data.success) {
-            data.messages.forEach(msgObj => {
-              displayMessage(msgObj.msg);
-            });
-          }
-        } catch (error) {
-          console.error('Failed to load messages:', error);
-        }
-      }
-    
-      // ✅ Display a message in the chat box
-      function displayMessage(message) {
-        const div = document.createElement('div');
-        div.textContent = message;
-        messageBox.appendChild(div);
-      }
-    
-      // ✅ Send a new message to the server
-      function sendMessage() {
-        const input = document.getElementById('messageInput');
-        const msg = input.value.trim();
-        if (!msg) return;
-    
-        fetch('http://localhost:3005/message', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ msg })
-        });
-    
-        input.value = '';
-      }
-    
-      // ✅ Real-time updates using SSE
-      const source = new EventSource('http://localhost:3005/events');
-      source.onmessage = function (event) {
-        const msg = event.data;
-        displayMessage(msg);
-      };
-    
-      // ✅ Load messages when the page is ready
-      window.addEventListener('DOMContentLoaded', loadMessages);
-        
+  <input type="text" id="message" placeholder="Type message...">
+  <button id="send">Send</button>
 
+  <script>
+    const userId = prompt("Your user ID:");
+    const receiverId = prompt("Receiver ID:");
+    const chatDiv = document.getElementById("chat");
 
-        function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
+    // Load message history
+    fetch(`/messages/${userId}/${receiverId}`)
+      .then(res => res.json())
+      .then(msgs => msgs.forEach(addMessage));
 
-const recipientUsernam = getQueryParam('username');
-document.getElementById("name").textContent = recipientUsernam;
+    // SSE connection
+    const evtSource = new EventSource(`/events/${userId}`);
+    evtSource.onmessage = e => addMessage(JSON.parse(e.data));
 
-function back(){
-      const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-    if (isMobile) {
-      window.location.href = '/mobile-dashboard';
-    } else {
-      window.location.href = '/dashboard';
+    // Send message
+    document.getElementById("send").onclick = async () => {
+      const text = document.getElementById("message").value.trim();
+      if (!text) return;
+
+      await fetch("/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sender: userId, receiver: receiverId, text }),
+      });
+
+      document.getElementById("message").value = "";
+      addMessage({ sender: userId, text, timestamp: new Date() });
+    };
+
+    function addMessage(msg) {
+      const div = document.createElement("div");
+      const side = msg.sender === userId ? "🟢 You" : "🔵 Them";
+      div.textContent = `${side}: ${msg.text}`;
+      chatDiv.appendChild(div);
+      chatDiv.scrollTop = chatDiv.scrollHeight;
     }
-    }
-
-    </script>
-    
-       
+  </script>
 </body>
 </html>
